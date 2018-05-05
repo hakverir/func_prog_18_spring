@@ -6,6 +6,8 @@
 -- character count -> mapping from chars to ints. list of (Char, Int) or Map
 -- examine fromList and fromListWith funcs
 
+import Data.Char
+
 type AWord = String
 
 type Sentence = [String]
@@ -14,18 +16,17 @@ type CharacterCount = [(Char, Int)]
 
 wordCharCounts :: AWord -> CharacterCount
 wordCharCounts [] = []
-wordCharCounts wrd@(x:xs) = (x, (length(filter (\y -> y == x) xs) + 1)) : wordCharCounts (dropChars wrd x)
+wordCharCounts wrd@(x:xs) = (x, (length(filter (\y -> (toLower y) == (toLower x)) xs) + 1)) : wordCharCounts (dropChars wrd x)
     where
         dropChars :: AWord -> Char -> AWord
         dropChars ys ch
-            | ys            == []   = []
-            | head ys       == ch   = dropChars (tail ys) ch
-            | otherwise             = head ys : dropChars (tail ys) ch
+            | ys                        == []             = []
+            | (toLower (head ys))       == (toLower ch)   = dropChars (tail ys) ch
+            | otherwise                                   = head ys : dropChars (tail ys) ch
 
 
-
-
--- sentenceCharCounts :: [a] -> CharacterCount
+--sentenceCharCounts :: Sentence -> CharacterCount
+--sentenceCharCounts 
 
 -- dictCharCounts :: [Word] -> [(String, [(Char, Int)])]
 
