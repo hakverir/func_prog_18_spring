@@ -35,7 +35,11 @@ sentenceCharCounts xs = wordCharCounts $ dropSpaces xs
             | head ys         == ' '    = dropSpaces (tail ys)
             | otherwise                 = head ys : dropSpaces (tail ys)
 
--- dictCharCounts :: [Word] -> [(String, [(Char, Int)])]
+
+dictCharCounts :: [AWord] -> [(String, [(Char, Int)])]
+dictCharCounts [] = []
+dictCharCounts xs = (head xs, wordCharCounts (head xs)) : dictCharCounts (tail xs)
+
 
 -- dictWordsByCharCounts :: [(String, [(Char, Int)])] -> [([(Char, Int)], [String])] 
 
