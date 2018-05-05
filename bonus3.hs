@@ -25,8 +25,15 @@ wordCharCounts wrd@(x:xs) = (x, (length(filter (\y -> (toLower y) == (toLower x)
             | otherwise                                   = head ys : dropChars (tail ys) ch
 
 
---sentenceCharCounts :: Sentence -> CharacterCount
---sentenceCharCounts 
+sentenceCharCounts :: String -> CharacterCount
+sentenceCharCounts [] = []
+sentenceCharCounts xs = wordCharCounts $ dropSpaces xs
+    where
+        dropSpaces :: String -> String
+        dropSpaces ys
+            | ys              == []     = []
+            | head ys         == ' '    = dropSpaces (tail ys)
+            | otherwise                 = head ys : dropSpaces (tail ys)
 
 -- dictCharCounts :: [Word] -> [(String, [(Char, Int)])]
 
