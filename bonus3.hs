@@ -41,7 +41,23 @@ dictCharCounts [] = []
 dictCharCounts xs = (head xs, wordCharCounts (head xs)) : dictCharCounts (tail xs)
 
 
--- dictWordsByCharCounts :: [(String, [(Char, Int)])] -> [([(Char, Int)], [String])] 
+dictWordsByCharCounts :: [(String, [(Char, Int)])] -> [([String], [(Char, Int)])]
+dictWordsByCharCounts [] = []
+dictWordsByCharCounts xs@(x':xs') = (mergeWords x' xs') : dictWordsByCharCounts (dropFound xs)
+    where
+            mergeWords :: (String, [(Char, Int)]) -> [(String, [(Char, Int)])] -> ([String], [(Char, Int)])
+            mergeWords (a, as) [] = ([a], as)
+            mergeWords (a, as) bs = ( (a : map fst (filter (\j -> checkLetters as (snd j) ) bs) ) , as)
+
+            dropFound :: [(String, [(Char, Int)])] -> [(String, [(Char, Int)])]
+            dropFound [] = []
+            dropFound ts = filter (\b -> (checkLetters (snd $ head ts) (snd b)) == False ) ts
+
+            checkLetters :: [(Char, Int)] -> [(Char, Int)] -> Bool
+            checkLetters [] [] = True
+            checkLetters ys zs 
+                | length(filter (\p -> (head ys) == p) zs) == 0    = False
+                | otherwise                                        = checkLetters (tail ys) (filter (\r -> head ys /= r) zs)
 
 -- wordAnagrams :: Word -> [([(Char, Int)], [String])] -> [String]
 
