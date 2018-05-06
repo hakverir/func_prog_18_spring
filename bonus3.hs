@@ -53,12 +53,23 @@ dictWordsByCharCounts xs@(x':xs') = (mergeWords x' xs') : dictWordsByCharCounts 
             dropFound [] = []
             dropFound ts = filter (\b -> (checkLetters (snd $ head ts) (snd b)) == False ) ts
 
-            checkLetters :: [(Char, Int)] -> [(Char, Int)] -> Bool
-            checkLetters [] [] = True
-            checkLetters ys zs 
-                | length(filter (\p -> (head ys) == p) zs) == 0    = False
-                | otherwise                                        = checkLetters (tail ys) (filter (\r -> head ys /= r) zs)
 
--- wordAnagrams :: Word -> [([(Char, Int)], [String])] -> [String]
+checkLetters :: [(Char, Int)] -> [(Char, Int)] -> Bool
+checkLetters [] [] = True
+checkLetters ys zs 
+    | length(filter (\p -> (head ys) == p) zs) == 0    = False
+    | otherwise                                        = checkLetters (tail ys) (filter (\r -> head ys /= r) zs)
+
+
+wordAnagrams :: AWord -> [([String], [(Char, Int)])] -> [String]
+wordAnagrams _ [] = []
+wordAnagrams wrd wrdList = filter (\a -> a /= wrd) (unList (map fst (filter (\b -> (checkLetters (wordCharCounts wrd) (snd b) ) ) wrdList)))
+    where
+        unList :: [[AWord]] -> [AWord]
+        unList [] = []
+        unList [[]] = []
+        unList [xs] = xs
+
+
 
 -- charCountsSubsets :: CharacterCount -> [(Char, Int)]
