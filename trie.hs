@@ -36,16 +36,18 @@ search wrd@(w:ws) (Trie e c)
     | otherwise                                               = search ws (fromJust (M.lookup w c))
 
 getWords :: Trie -> [Word] -- use toList //////  write a function that traverses the trie (while keeping track of where it came from) and also keeps an accumulator which found words are inserted into
-getWords (Trie e t) = findWords [] [] [] (M.toList t)
+getWords (Trie x y) = findWords [] [] [] (M.toList y)
     where
         findWords :: [(Char, Trie)] -> Word -> [Word] -> [(Char, Trie)] -> [Word]
+        -- findWords wrd acc (Trie x y) (Trie z t)
+        --     | 
         findWords acc wrd lst trace
             | trace                                                            == []        = lst
             | snd (head trace)                                                 == empty     = findWords [] [] lst (tail trace)   -- head of tracei gittikce bosaltmak lazim
             | length(returnChildren (head trace))                               > 1         = findWords (tail (returnChildren (head trace)) ++ acc) wrd lst (returnChildren (head trace))
-            | isEnd (snd (head trace)) == True  && returnChildren (head trace) == []        = findWords acc [] (lst ++ [ wrd ++ [returnFirstChar trace]] ) (returnChildren (head trace))
-            | isEnd (snd (head trace)) == True  && returnChildren (head trace) /= []        = findWords acc [] (lst ++ [ wrd ++ [returnFirstChar trace]] ) (returnChildren (head trace))
-            | otherwise                                                                     = findWords acc (wrd ++ [fst (head trace)]) lst (returnChildren (head trace))
+            | isEnd (snd (head trace)) == True  && returnChildren (head trace) == []        = findWords [] [] (lst ++ [ wrd ++ [returnFirstChar trace]] ) (acc ++ tail trace)
+            | isEnd (snd (head trace)) == True  && returnChildren (head trace) /= []        = findWords (acc) [] (lst ++ [ wrd ++ [returnFirstChar trace]] ) (returnChildren (head trace))
+            | otherwise                                                                     = findWords (acc) (wrd ++ [fst (head trace)]) lst (returnChildren (head trace))
 
         isEnd :: Trie -> Bool
         isEnd (Trie a b) = a
