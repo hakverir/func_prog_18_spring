@@ -5,7 +5,7 @@ import System.IO
 import Prelude hiding (Word)
 
 data Trie = Trie {end :: Bool, children :: M.Map Char Trie}
-            deriving Show
+            deriving (Eq, Show)
 
 type Word = String
 
@@ -21,3 +21,11 @@ insert wrd@(w:ws) (Trie e c)
 insertList :: [Word] -> Trie
 insertList [] = empty
 insertList wrd = foldr insert empty wrd
+
+search :: Word -> Trie -> Bool
+search [] (Trie e c) = case e of 
+    True  -> True 
+    False -> False
+search wrd@(w:ws) (Trie e c)
+    | M.lookup w c == Nothing                                 = False
+    | otherwise                                               = search ws (fromJust (M.lookup w c))
