@@ -17,3 +17,7 @@ insert [] (Trie e c) =  (Trie True c)
 insert wrd@(w:ws) (Trie e c)
     | M.lookup w c == Nothing                                 = Trie e (M.insert w (insert ws empty) c)
     | otherwise                                               = Trie e (M.insert w (insert ws (fromJust (M.lookup w c))) c)
+
+insertList :: [Word] -> Trie
+insertList [] = empty
+insertList wrd = foldr insert empty wrd
